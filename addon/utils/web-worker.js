@@ -8,7 +8,7 @@ import Evented from '@ember/object/evented';
 
 export default function webWorker(options={}) {
   const Listener = EmberObject.extend(Evented, {
-    message(msg) { this.trigger('onMessage', msg); }
+    message(msg) { this.trigger('message', msg); }
   });
 
   const worker = new Worker('/workers/data-sync.js');

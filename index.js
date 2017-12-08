@@ -8,10 +8,27 @@ const path = require('path');
 module.exports = {
   name: '@busybusy/sync-manager',
 
+  options: {
+		nodeAssets: {
+      "dexie": {
+        srcDir: 'dist',
+        //import: ['dexie.js'],
+        vendor: ['dexie.js', 'dexie.js.map']
+      },
+      //"@busybusy/data-sync-web-worker": {
+      //  public: {
+      //    destDir: 'workers',
+      //    include: ['data-sync.js'],
+      //  }
+      //}
+    },
+  },
+
   included() {
     this._super.included.apply(this, arguments);
     this._options = this.getOptions();
-    //this.importDependencies();
+
+    this.import('vendor/dexie/dexie.js', { using: [ { transformation: 'amd', as: 'dexie' } ] });
   },
 
   treeForPublic() {
