@@ -8,7 +8,7 @@ import mergeConfig from '@busybusy/sync-manager/utils/merge-config';
 /***/
 const DEFAULTS = {
   debug: false,
-  db: { path: 'database:application' },
+  db: { name: 'sync_db', path: 'database' },
   api: { host: 'localhost:4200', version: '1', headers: {} },
   auth: {}
 };

@@ -22,13 +22,27 @@ export default Service.extend({
     const opts = mergeConfig(options, get(this, 'config'));
     const owner = getOwner(this);
     const path = get(opts, 'db.path');
-    const db = owner.factoryFor(path);
+    const db = mergeConfig({}, get(opts, 'db'));
+    const stores = [];
 
-    assert(`sync-manager: database configuration was not found at ${path}`, db && db.class);
+    let _store = 1;
+    let ver = 1;
+    while(_store) {
+      _store = owner.factoryFor(`${path}:v${ver}`);
+      if (_store && _store.class) {
+        _store = get(_store, 'class');
+        set(_store, 'version', ver);
+        stores.unshift(_store);
+      }
+      ver += 1;
+    }
 
-    let mergedDB = mergeConfig(get(opts, 'db'), db.class);
-    set(opts, 'db', mergedDB);
-    set(this, 'dbInfo', mergedDB);
+    console.log('stores', stores);
+    assert(`sync-manager: database configuration was not found at ${path}`, stores.length > 0);
+
+    set(db, 'stores', stores);
+    set(opts, 'db', db);
+    set(this, 'dbInfo', db);
 
 
     let worker = webWorker(opts);

@@ -2,11 +2,11 @@
 import dexie from 'dexie';
 
 export default function queryData(info, type, cb) {
-	const stores = info.stores || {};
-	stores.__sync = 'id';
-
+	const stores = info.stores || [];
 	const db = new dexie(info.name);
-	db.version(info.version).stores(info.stores);
+  stores.forEach(_store => {
+    db.version(_store.version).stores(_store.stores);
+  });
 
 	db.open().catch(e => {
 		window.console.error('db open error', e);
